@@ -1,0 +1,7 @@
+# Ignore all files
+*.pyc
+__pycache__
+.env
+.venv
+# Ignore specific files
+*.log

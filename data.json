@@ -1,0 +1,24 @@
+{
+    "blog_posts": [
+        {
+            "title": "Getting Started",
+            "author": "Cotes Chung",
+            "publication_date": "Aug 9, 2019"
+        },
+        {
+            "title": "Text and Typography",
+            "author": "Cotes Chung",
+            "publication_date": "Aug 8, 2019"
+        },
+        {
+            "title": "Customize the Favicon",
+            "author": "Cotes Chung",
+            "publication_date": "Aug 11, 2019"
+        },
+        {
+            "title": "Writing a New Post",
+            "author": "Cotes Chung",
+            "publication_date": "Aug 8, 2019"
+        }
+    ]
+}
