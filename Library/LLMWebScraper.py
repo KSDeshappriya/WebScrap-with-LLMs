@@ -41,7 +41,7 @@ Please extract the information in a structured JSON format.
 """
         )
 
-    def fetch_webpage(self, url: str) -> str:
+    def __fetch_webpage(self, url: str) -> str:
         """Fetch HTML content from a given URL."""
         try:
             response = requests.get(url, timeout=10)
@@ -53,7 +53,7 @@ Please extract the information in a structured JSON format.
             raise
 
     @retry(stop_max_attempt_number=3, wait_exponential_multiplier=1000)
-    def generate_output(self, input_data: str) -> str:
+    def __generate_output(self, input_data: str) -> str:
         """Generate content using GenAI with retry logic."""
         try:
             return self.model.generate_content(contents=input_data).text
@@ -61,12 +61,12 @@ Please extract the information in a structured JSON format.
             logging.warning(f"Error during content generation: {e}")
             raise
 
-    def extract_data(self, html_content: str, instructions: str) -> str:
+    def __extract_data(self, html_content: str, instructions: str) -> str:
         """Generate a structured response by passing HTML content and instructions to the language model."""
         formatted_prompt = self.prompt_template.format(html=html_content, instructions=instructions)
-        return self.generate_output(formatted_prompt)
+        return self.__generate_output(formatted_prompt)
 
-    def extract_json(self, md_code: str) -> Optional[Dict[str, Any]]:
+    def __extract_json(self, md_code: str) -> Optional[Dict[str, Any]]:
         """Extract and parse JSON from markdown-style code."""
         match = re.search(r'```json\s*({[\s\S]*?})\s*```', md_code)
         if match:
@@ -78,7 +78,17 @@ Please extract the information in a structured JSON format.
         logging.error("No JSON code block found in the response.")
         return None
 
-    def save_to_file(self, data: Dict[str, Any], file_path: str) -> None:
+    def toJSON(self, url: str, instructions: str) -> Optional[Dict[str, Any]]:
+        """Extract data from a given URL using provided instructions."""
+        try:
+            html_content = self.__fetch_webpage(url)
+            extracted_md = self.__extract_data(html_content, instructions)
+            return self.__extract_json(extracted_md)
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")
+            return None
+        
+    def toFile(self, data: Dict[str, Any], file_path: str) -> None:
         """Save the extracted data to a JSON file."""
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, 'w') as f:
@@ -120,18 +130,12 @@ Example:
     url = "https://chirpy.cotes.page/"
 
     try:
-        # Fetch webpage HTML content
-        html_content = scraper.fetch_webpage(url)
-
-        # Extract data using GenAI
-        extracted_md = scraper.extract_data(html_content, instructions)
-
-        # Parse JSON from the extracted markdown
-        blog_data = scraper.extract_json(extracted_md)
+        # Parse JSON from the extracted Data From given URL
+        blog_data = scraper.toJSON(url, instructions)
 
         # Save the data if valid
         if blog_data:
-            scraper.save_to_file(blog_data, "output/data.json")
+            scraper.toFile(blog_data, "output/data.json")
         else:
             logging.warning("No blog data to save.")
     except Exception as e:
