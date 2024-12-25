@@ -19,6 +19,9 @@ This project demonstrates how to scrape a webpage and extract specific informati
 - `google.generativeai` library
 - `langchain` library
 - `json` and `re` modules (part of the Python standard library)
+- `python-dotenv`: To manage environment variables via `.env` files.
+- `retrying`: To add retry logic with exponential backoff.
+- `logging`: (Part of the Python standard library, no need to install separately.)
 
 ## Installation
 
@@ -26,7 +29,7 @@ This project demonstrates how to scrape a webpage and extract specific informati
 2. Install the required libraries using pip:
 
    ```bash
-   pip install requests google-generativeai langchain python-dotenv
+   pip install requests google-generativeai langchain python-dotenv retrying
    ```
 
 3. Ensure you have a valid API key for the Google Generative AI service.
@@ -78,6 +81,10 @@ The output JSON file (`data.json`) will contain the extracted blog data in the f
     ]
 }
 ```
+
+## Version Information
+
+You can see these from [Version.md](Version.md)
 
 ## Contributing
 
